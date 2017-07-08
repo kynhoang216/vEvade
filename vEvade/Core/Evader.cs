@@ -5,11 +5,9 @@ namespace vEvade.Core
     using System;
     using System.Collections.Generic;
     using System.Linq;
-
-    using LeagueSharp;
-    using LeagueSharp.Common;
+    
     using EloBuddy;
-
+    using EloBuddy.SDK;
     using SharpDX;
 
     using vEvade.EvadeSpells;
@@ -180,7 +178,7 @@ namespace vEvade.Core
                 {
                     case SpellValidTargets.AllyChampions:
                         targets.AddRange(
-                            HeroManager.Allies.Where(i => !i.IsMe && i.IsValidTarget(evadeSpell.MaxRange, false, myPos)));
+                            EntityManager.Heroes.Allies.Where(i => !i.IsMe && i.IsValidTarget(evadeSpell.MaxRange, false, myPos)));
                         break;
                     case SpellValidTargets.AllyMinions:
                         targets.AddRange(
@@ -198,7 +196,7 @@ namespace vEvade.Core
                         break;
                     case SpellValidTargets.EnemyChampions:
                         targets.AddRange(
-                            HeroManager.Enemies.Where(i => i.IsValidTarget(evadeSpell.MaxRange, true, myPos)));
+                            EntityManager.Heroes.Enemies.Where(i => i.IsValidTarget(evadeSpell.MaxRange, true, myPos)));
                         break;
                     case SpellValidTargets.EnemyMinions:
                         targets.AddRange(
@@ -373,7 +371,7 @@ namespace vEvade.Core
         private static Vector2 OrderPoint(this IEnumerable<Vector2> points, Vector2 pos)
         {
             return
-                points.OrderBy(i => !i.To3D().UnderTurret(true))
+                points.OrderBy(i => !i.To3D().IsUnderTurret())
                     .ThenBy(i => i.To3D().CountEnemiesInRange(200))
                     .ThenBy(i => i.Distance(pos))
                     .FirstOrDefault();
@@ -382,7 +380,7 @@ namespace vEvade.Core
         private static Obj_AI_Base OrderTarget(this IEnumerable<Tuple<Obj_AI_Base, Vector2>> targets, Vector2 pos)
         {
             return
-                targets.OrderBy(i => !i.Item2.To3D().UnderTurret(true))
+                targets.OrderBy(i => !i.Item2.To3D().IsUnderTurret())
                     .ThenBy(i => i.Item2.To3D().CountEnemiesInRange(200))
                     .ThenBy(i => i.Item2.Distance(pos))
                     .Select(i => i.Item1)

@@ -7,15 +7,14 @@ namespace vEvade.Helpers
     using System.Net;
     using System.Reflection;
     using System.Text.RegularExpressions;
-
-    using LeagueSharp;
-    using LeagueSharp.Common;
     using EloBuddy;
 
     using SharpDX;
 
     using Color = System.Drawing.Color;
     using Version = System.Version;
+    using EloBuddy.SDK.Events;
+    using EloBuddy.SDK;
 
     #endregion
 
@@ -32,7 +31,7 @@ namespace vEvade.Helpers
         public static bool CommonCheck
             =>
                 ObjectManager.Player.IsDead || ObjectManager.Player.IsInvulnerable || !ObjectManager.Player.IsTargetable
-                || ShieldCheck || ObjectManager.Player.IsCastingInterruptableSpell(true)
+                || ShieldCheck || ObjectManager.Player.Spellbook.IsChanneling
                 || ObjectManager.Player.IsDashing() || ImmobileCheck;
 
         public static bool ShieldCheck

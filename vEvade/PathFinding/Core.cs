@@ -6,16 +6,16 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    using LeagueSharp.Common;
-
     using SharpDX;
-
+    using EloBuddy;
     using vEvade.Core;
+    using EloBuddy.SDK;
 
     #endregion
 
     public static class Core
     {
+
         #region Public Methods and Operators
 
         public static List<Vector2> FindPaths(Vector2 start, Vector2 end)

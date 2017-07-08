@@ -4,12 +4,11 @@
 
     using System.Collections.Generic;
 
-    using LeagueSharp.Common;
-
     using SharpDX;
 
     using vEvade.Core;
     using vEvade.Helpers;
+    using EloBuddy.SDK;
 
     #endregion
 

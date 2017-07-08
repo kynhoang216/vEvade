@@ -4,10 +4,8 @@
 
     using System;
     using System.Linq;
-
-    using LeagueSharp;
     using EloBuddy;
-    using LeagueSharp.Common;
+    using EloBuddy.SDK;
 
     using SharpDX;
 
@@ -43,7 +41,7 @@
             }
 
             ObjManager.ObjCache.Add(hiu.NetworkId, new ObjManagerInfo(hiu, "Hiu"));
-            LeagueSharp.Common.Utility.DelayAction.Add(250, () => ObjManager.ObjCache.Remove(hiu.NetworkId));
+            vEvade.DelayAction.Add(250, () => ObjManager.ObjCache.Remove(hiu.NetworkId));
         }
 
         #endregion

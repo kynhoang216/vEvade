@@ -25,7 +25,6 @@
         private static Vector2 yasuoWallPos;
 
         private static int yasuoWallTick;
-        public CollisionObjectTypes Type;
 
         #endregion
 

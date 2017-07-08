@@ -53,15 +53,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CollisionableObjects.cs" />
     <Compile Include="Core\Evader.cs" />
     <Compile Include="Core\Evade.cs" />
+    <Compile Include="DelayAction.cs" />
     <Compile Include="EvadeSpells\EvadeSpellData.cs" />
     <Compile Include="EvadeSpells\EvadeSpellDatabase.cs" />
+    <Compile Include="Geometry.cs" />
+    <Compile Include="GetWayPoint.cs" />
     <Compile Include="Helpers\Collision.cs" />
     <Compile Include="Helpers\Configs.cs" />
     <Compile Include="Helpers\Polygons.cs" />
     <Compile Include="Helpers\SpellBlocker.cs" />
     <Compile Include="Helpers\Util.cs" />
+    <Compile Include="Lastcasted.cs" />
     <Compile Include="Managers\HiuManager.cs" />
     <Compile Include="Managers\ObjManager.cs" />
     <Compile Include="Menu.cs" />

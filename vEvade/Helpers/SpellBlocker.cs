@@ -3,8 +3,6 @@
     #region
 
     using System.Collections.Generic;
-
-    using LeagueSharp;
     using EloBuddy;
 
     #endregion

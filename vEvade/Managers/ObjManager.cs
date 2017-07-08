@@ -6,10 +6,8 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Text.RegularExpressions;
-
-    using LeagueSharp;
     using EloBuddy;
-    using LeagueSharp.Common;
+    using EloBuddy.SDK;
 
     #endregion
 

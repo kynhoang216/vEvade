@@ -4,8 +4,7 @@
 
     using System;
     using System.Collections.Generic;
-
-    using LeagueSharp.Common;
+    using EloBuddy.SDK;
 
     using SharpDX;
 
@@ -106,8 +105,8 @@
                 var result = new Geometry.Polygon();
                 var outerRadius = (0.35256f * this.Distance + 133f) / (float)Math.Cos(2 * Math.PI / Quality);
                 var innerRadius = -0.1562f * this.Distance + 687.31f;
-                var outerCenter = Geometry.CircleCircleIntersection(this.Start, this.End, outerRadius, outerRadius)[0];
-                var innerCenter = Geometry.CircleCircleIntersection(this.Start, this.End, innerRadius, innerRadius)[0];
+                var outerCenter = vEvade.Geometry.CircleCircleIntersection(this.Start, this.End, outerRadius, outerRadius)[0];
+                var innerCenter = vEvade.Geometry.CircleCircleIntersection(this.Start, this.End, innerRadius, innerRadius)[0];
 
                 var dir = (this.End - outerCenter).Normalized();
                 var step = -(float)(dir.AngleBetween((this.Start - outerCenter).Normalized()) * Math.PI / 180) / Quality;
