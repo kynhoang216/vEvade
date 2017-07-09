@@ -3,11 +3,8 @@
     #region
 
     using System.Linq;
-
-    using LeagueSharp;
-    using LeagueSharp.Common;
     using EloBuddy;
-
+    using EloBuddy.SDK;
     using vEvade.Core;
     using vEvade.Helpers;
     using vEvade.Spells;

@@ -8,7 +8,7 @@
 
     using vEvade.Core;
     using vEvade.Helpers;
-    using EloBuddy.SDK;
+    using LeagueSharp.Common;
 
     #endregion
 

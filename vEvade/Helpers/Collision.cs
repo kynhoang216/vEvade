@@ -6,13 +6,13 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Text.RegularExpressions;
-    using EloBuddy.SDK;
     using EloBuddy;
 
     using SharpDX;
 
     using vEvade.Managers;
     using vEvade.Spells;
+    using EloBuddy.SDK;
 
     #endregion
 

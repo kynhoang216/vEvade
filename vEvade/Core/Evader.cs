@@ -14,6 +14,8 @@ namespace vEvade.Core
     using vEvade.Helpers;
     using vEvade.Managers;
     using vEvade.Spells;
+    using Path = System.Collections.Generic.List<ClipperLib.IntPoint>;
+    using Paths = System.Collections.Generic.List<System.Collections.Generic.List<ClipperLib.IntPoint>>;
 
     #endregion
 
@@ -265,7 +267,7 @@ namespace vEvade.Core
                 }
             }
 
-            return new SafePath(isSafe, isSafe ? new Intersects() : intersects.MinOrDefault(i => i.Distance));
+            return new SafePath(isSafe, isSafe ? new Intersects() : intersects.MinOrDefault(vector2 => vector2.Distance));
         }
 
         public static SafePath IsPathSafe(this Vector2 pos, int time, int speed = -1, int delay = 0)

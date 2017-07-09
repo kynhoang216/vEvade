@@ -3,11 +3,8 @@
     #region
 
     using System.Linq;
-
-    using LeagueSharp;
     using EloBuddy;
-    using LeagueSharp.Common;
-
+    using EloBuddy.SDK;
     using vEvade.Core;
     using vEvade.Helpers;
     using vEvade.Managers;
@@ -76,7 +73,7 @@
                     ObjectManager.Get<Obj_AI_Minion>()
                         .Where(
                             i =>
-                            i.IsValid() && !i.IsDead && i.CharData.BaseSkinName == "syndrasphere"
+                            i.IsValid && !i.IsDead && i.CharData.BaseSkinName == "syndrasphere"
                             && i.Team == sender.Team)
                         .Select(i => i.ServerPosition.To2D()));
 

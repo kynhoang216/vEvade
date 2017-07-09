@@ -3,11 +3,8 @@
     #region
 
     using System.Linq;
-
-    using LeagueSharp;
-    using LeagueSharp.Common;
     using EloBuddy;
-
+    using EloBuddy.SDK;
     using vEvade.Helpers;
     using vEvade.Spells;
 
@@ -48,7 +45,7 @@
             }
 
             var hero =
-                HeroManager.AllHeroes.FirstOrDefault(
+                EntityManager.Heroes.AllHeroes.FirstOrDefault(
                     i => i.ChampionName == data.ChampName && (i.IsEnemy || Configs.Debug));
 
             if (hero != null)

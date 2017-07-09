@@ -5,10 +5,11 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-
-    using LeagueSharp;
-    using LeagueSharp.Common;
+    using System.Reflection;
+    using System.Reflection.Emit;
     using EloBuddy;
+    using EloBuddy.SDK;
+    using EloBuddy.SDK.Menu.Values;
 
     using SharpDX;
 
@@ -215,14 +216,14 @@
 
                 this.cachedValueTick = Utils.GameTimeTickCount;
 
-                if (Configs.DodgeDangerous && !this.GetValue<bool>("IsDangerous"))
+                if (Configs.DodgeDangerous && !this.GetCheckBoxValue("IsDangerous").CurrentValue)
                 {
                     this.cachedValue = false;
 
                     return this.cachedValue;
                 }
 
-                this.cachedValue = this.GetValue<bool>("Enabled");
+                this.cachedValue = this.GetCheckBoxValue("Enabled").CurrentValue;
 
                 if (this.cachedValue)
                 {
@@ -245,7 +246,7 @@
 
                     if (Configs.CheckHp)
                     {
-                        this.cachedValue = ObjectManager.Player.HealthPercent <= this.GetValue<Slider>("IgnoreHp").Value;
+                        this.cachedValue = ObjectManager.Player.HealthPercent <= this.GetSliderValue("IgnoreHp").CurrentValue;
                     }
 
                     if (this.IsFromFoW && Configs.DodgeFoW == 1)
@@ -308,7 +309,7 @@
 
         public void Draw(Color color)
         {
-            if (!this.GetValue<bool>("Draw"))
+            if (!this.GetCheckBoxValue("Draw").CurrentValue)
             {
                 return;
             }
@@ -317,7 +318,8 @@
 
             if (Configs.Debug && (this.Type == SpellType.Circle || this.Type == SpellType.Ring) && this.Data.Range > 0)
             {
-                Render.Circle.DrawCircle(this.Start.To3D(), this.Data.Range, Color.White);
+                EzEvade.Render.Circle.DrawCircle(this.Start.To3D(), this.Data.Range, Color.White);
+                //new EloBuddy.SDK.Rendering.Circle() { BorderWidth = 2, Color = Color.White, Radius = 100 }.Draw(this.Start.To3D2(this.Data.Range));
             }
 
             if (this.Type == SpellType.MissileLine)
@@ -374,9 +376,17 @@
             return this.Start + this.Direction * t;
         }
 
-        public T GetValue<T>(string name)
+        public Slider GetSliderValue(string name)
         {
-            return Configs.Menu.Item("S_" + this.Data.MenuName + "_" + name).GetValue<T>();
+            return Configs.Menu[name + Data.MenuItemName].Cast<Slider>();
+        }
+        public CheckBox GetCheckBoxValue(string name)
+        {
+            return Configs.Menu[Data.MenuItemName].Cast<CheckBox>();
+        }
+        public KeyBind GetKeyBindValue(string name)
+        {
+            return Configs.Menu[Data.MenuItemName].Cast<KeyBind>();
         }
 
         public bool IsAboutToHit(int time, Obj_AI_Base unit)
@@ -677,7 +687,7 @@
                     break;
             }
         }
-
+        
         #endregion
     }
 }

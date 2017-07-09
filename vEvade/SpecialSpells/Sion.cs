@@ -5,10 +5,7 @@
     using System.Linq;
     using EloBuddy;
     using System.Text.RegularExpressions;
-
-    using LeagueSharp;
-    using LeagueSharp.Common;
-
+    using EloBuddy.SDK;
     using vEvade.Core;
     using vEvade.Helpers;
     using vEvade.Spells;
@@ -29,7 +26,7 @@
             }
 
             var hero =
-                HeroManager.AllHeroes.FirstOrDefault(
+                EntityManager.Heroes.AllHeroes.FirstOrDefault(
                     i => i.ChampionName == spellData.ChampName && (i.IsEnemy || Configs.Debug));
 
             if (hero == null)

@@ -4,9 +4,7 @@
 
     using System.Linq;
     using EloBuddy;
-
-    using LeagueSharp;
-    using LeagueSharp.Common;
+    using EloBuddy.SDK;
 
     using vEvade.Core;
     using vEvade.Helpers;
@@ -71,7 +69,7 @@
                 ObjectManager.Get<Obj_AI_Minion>()
                     .Where(
                         i =>
-                        i.IsValid() && !i.IsDead && i.CharData.BaseSkinName == "jarvanivstandard"
+                        i.IsValid && !i.IsDead && i.CharData.BaseSkinName == "jarvanivstandard"
                         && i.Team == sender.Team
                         && i.ServerPosition.To2D().Distance(startPos, qeEnd, true) < qeData.RadiusEx)
                     .Select(i => i.ServerPosition.To2D()));

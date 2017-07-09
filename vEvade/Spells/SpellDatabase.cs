@@ -4,10 +4,7 @@ namespace vEvade.Spells
 
     using System;
     using System.Collections.Generic;
-
-    using LeagueSharp;
     using EloBuddy;
-    using LeagueSharp.Common;
 
     #endregion
 

@@ -9,7 +9,7 @@ namespace vEvade.Helpers
     using System.Reflection.Emit;
     using EloBuddy;
     using EloBuddy.SDK.Menu;
-    using EloBuddy.SDK;
+    using LeagueSharp.Common;
     using EloBuddy.SDK.Menu.Values;
 
     using vEvade.Core;
@@ -19,6 +19,7 @@ namespace vEvade.Helpers
 
     using SpellData = vEvade.Spells.SpellData;
     using SharpDX;
+    using EloBuddy.SDK;
 
     #endregion
 
@@ -62,27 +63,27 @@ namespace vEvade.Helpers
 
         #region Public Properties
 
-        public static int CheckBlock => Configs.misc["CheckBlock"].Cast<Slider>().CurrentValue;
+        public static int CheckBlock => misc["CheckBlock"].Cast<Slider>().CurrentValue;
 
-        public static bool CheckCollision => Configs.collision["CheckCollision"].Cast<CheckBox>().CurrentValue;
+        public static bool CheckCollision => misc["CheckCollision"].Cast<CheckBox>().CurrentValue;
 
-        public static bool CheckHp => Configs.misc["CheckHp"].Cast<CheckBox>().CurrentValue;
+        public static bool CheckHp => misc["CheckHp"].Cast<CheckBox>().CurrentValue;
 
-        public static bool DodgeCircle => Configs.misc["DodgeCircle"].Cast<CheckBox>().CurrentValue;
+        public static bool DodgeCircle => misc["DodgeCircle"].Cast<CheckBox>().CurrentValue;
 
-        public static bool DodgeCone => Configs.misc["DodgeCone"].Cast<CheckBox>().CurrentValue;
+        public static bool DodgeCone => misc["DodgeCone"].Cast<CheckBox>().CurrentValue;
 
         public static bool DodgeDangerous => Menu["DodgeDangerous"].Cast<KeyBind>().CurrentValue;
 
-        public static int DodgeFoW => Configs.misc["DodgeFoW"].Cast<Slider>().CurrentValue;
+        public static int DodgeFoW => misc["DodgeFoW"].Cast<Slider>().CurrentValue;
 
-        public static bool DodgeLine => Configs.misc["DodgeLine"].Cast<CheckBox>().CurrentValue;
+        public static bool DodgeLine => misc["DodgeLine"].Cast<CheckBox>().CurrentValue;
 
-        public static bool DodgeTrap => Configs.misc["DodgeTrap"].Cast<CheckBox>().CurrentValue;
+        public static bool DodgeTrap => misc["DodgeTrap"].Cast<CheckBox>().CurrentValue;
 
-        public static bool DrawSpells => Configs.drawings["DrawSpells"].Cast<CheckBox>().CurrentValue;
+        public static bool DrawSpells => drawings["DrawSpells"].Cast<CheckBox>().CurrentValue;
 
-        public static bool DrawStatus => Configs.drawings["DrawStatus"].Cast<CheckBox>().CurrentValue;
+        public static bool DrawStatus => drawings["DrawStatus"].Cast<CheckBox>().CurrentValue;
 
         public static bool Enabled => Menu["Enabled"].Cast<KeyBind>().CurrentValue;
 
@@ -93,9 +94,8 @@ namespace vEvade.Helpers
         public static void CreateMenu()
         {
             Menu = MainMenu.AddMenu("vEvade", "vEvade");
-            LoadSpecialSpellPlugins();
 
-            skillShots = Menu.AddSubMenu("Spells", "Spells");
+             skillShots = Menu.AddSubMenu("Spells", "Spells");
 
             foreach (var hero in EntityManager.Heroes.AllHeroes.Where(i => i.IsEnemy || Debug))
             {
@@ -133,49 +133,50 @@ namespace vEvade.Helpers
                         Evade.OnTrapSpells.Add(spell.TrapName, spell);
                     }
 
-                    LoadSpecialSpell(spell);
+                    //LoadSpecialSpell(spell);
 
                     var txt = "S_" + spell.MenuName;
-                    var subMenu =
-                        Menu.AddSubMenu(spell.IsSummoner ? spell.SpellName : spell.ChampName + " (" + spell.Slot + ")", txt);
-                    subMenu.Add("_DangerLvl" + txt, new Slider("Danger Level", spell.DangerValue, 1, 5));
-                    subMenu.Add("_IsDangerous" + txt, new CheckBox("Is Dangerous", spell.IsDangerous));
-                    subMenu.Add(txt + "_IgnoreHp", new Slider("Ignore If Hp >", !spell.IsDangerous ? 65 : 100, 1));
-                    subMenu.Add(txt + "_Draw", new CheckBox("Draw", true));
-                    subMenu.Add(txt + "_Enabled", new CheckBox("Enabled", !spell.DisabledByDefault));
+                    skillShots.AddGroupLabel(txt);
+
+
+                    skillShots.Add("_DangerLvl" + txt, new Slider("Danger Level", spell.DangerValue, 1, 5));
+                    skillShots.Add("_IsDangerous" + txt, new CheckBox("Is Dangerous", spell.IsDangerous));
+                    skillShots.Add(txt + "_IgnoreHp", new Slider("Ignore If Hp >", !spell.IsDangerous ? 65 : 100, 1));
+                    skillShots.Add(txt + "_Draw", new CheckBox("Draw", true));
+                    skillShots.Add(txt + "_Enabled", new CheckBox("Enabled", !spell.DisabledByDefault));
                 }
             }
 
             //Menu.AddSubMenu(spells);
 
-            evadeSpells = Menu.AddSubMenu("Evade Spells", "EvadeSpells");
+            var evadeSpells = Menu.AddSubMenu("Evade Spells", "EvadeSpells");
 
             foreach (var spell in EvadeSpellDatabase.Spells)
             {
                 var txt = "ES_" + spell.MenuName;
-                var subMenu = Menu.AddSubMenu(spell.MenuName, txt);
-                subMenu.Add("_DangerLvl" + txt, new Slider("Danger Level", spell.DangerLevel, 1, 5));
+                evadeSpells.AddGroupLabel(txt);
+                evadeSpells.Add("_DangerLvl" + txt, new Slider("Danger Level", spell.DangerLevel, 1, 5));
 
                 if (spell.IsTargetted && spell.ValidTargets.Contains(SpellValidTargets.AllyWards))
                 {
-                    subMenu.Add("_WardJump" + txt, new CheckBox("Ward Jump", false));
+                    evadeSpells.Add("_WardJump" + txt, new CheckBox("Ward Jump", false));
                 }
 
-                subMenu.Add("_Enabled" + txt, new CheckBox("Enabled"));
+                evadeSpells.Add("_Enabled" + txt, new CheckBox("Enabled"));
                 //evadeSpells.Add(subMenu);
             }
-            
 
-           shielding = Menu.AddSubMenu("Shield Ally", "ShieldAlly");
+
+            var shielding = Menu.AddSubMenu("Shield Ally", "ShieldAlly");
 
             foreach (var ally in EntityManager.Heroes.Allies.Where(i => !i.IsMe))
             {
                 shielding.Add("SA_" + ally.ChampionName, new CheckBox(ally.ChampionName, true));
             }
 
-            
 
-            misc = Menu.AddSubMenu("Misc", "Misc");
+
+            var misc = Menu.AddSubMenu("Misc", "Misc");
             misc.Add("CheckCollision", new CheckBox("Check Collision", false));
             misc.Add("CheckHp", new CheckBox("Check Player Hp", false));
             misc.AddStringList("CheckBlock", "Block Cast While Dodge", new[] { "No", "Only Dangerous", "Always" }, 1);
@@ -185,9 +186,9 @@ namespace vEvade.Helpers
             misc.Add("DodgeCone", new CheckBox("Dodge Cone Spells"));
             misc.Add("DodgeTrap", new CheckBox("Dodge Traps"));
 
-            drawings = Menu.AddSubMenu("Draw", "Draw");
-            drawings.Add("DrawSpells", new CheckBox("Draw Spells"));
-            drawings.Add("DrawStatus", new CheckBox("Draw Status"));
+            var draw = Menu.AddSubMenu("Draw", "Draw");
+            draw.Add("DrawSpells", new CheckBox("Draw Spells", true));
+            draw.Add("DrawStatus", new CheckBox("Draw Status", true));
 
             Menu.Add("Enabled", new KeyBind("Enabled", true, KeyBind.BindTypes.PressToggle));
             Menu.Add("DodgeDangerous", new KeyBind("Dodge Only Dangerous", false, KeyBind.BindTypes.HoldActive));

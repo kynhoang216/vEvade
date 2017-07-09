@@ -1,8 +1,7 @@
 ﻿namespace vEvade
 {
     #region
-
-    using LeagueSharp.Common;
+    
 
     using vEvade.Core;
     using vEvade.Helpers;

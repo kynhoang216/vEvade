@@ -2,8 +2,6 @@
 {
     #region
 
-    using LeagueSharp;
-
     using vEvade.Core;
     using vEvade.Spells;
     using EloBuddy;

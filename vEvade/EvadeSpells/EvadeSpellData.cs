@@ -1,10 +1,8 @@
 ﻿namespace vEvade.EvadeSpells
 {
     #region
-
-    using LeagueSharp;
-    using LeagueSharp.Common;
     using EloBuddy;
+    using EloBuddy.SDK.Menu.Values;
 
     using vEvade.Helpers;
 
@@ -28,6 +26,8 @@
     public class EvadeSpellData
     {
         #region Fields
+
+        public bool IsSummonerSpell;
 
         public bool CanShieldAllies;
 
@@ -99,8 +99,8 @@
         {
             get
             {
-                return Configs.Menu.Item("ES_" + this.MenuName + "_DangerLvl") != null
-                           ? Configs.Menu.Item("ES_" + this.MenuName + "_DangerLvl").GetValue<Slider>().Value
+                return Configs.Menu["ES_" + this.MenuName + "_DangerLvl"] != null
+                           ? Configs.Menu["ES_" + this.MenuName + "_DangerLvl"].Cast<Slider>().CurrentValue
                            : this.dangerLevel;
             }
             set
@@ -111,14 +111,16 @@
 
         public bool Enabled
             =>
-                Configs.Menu.Item("ES_" + this.MenuName + "_Enabled") == null
-                || Configs.Menu.Item("ES_" + this.MenuName + "_Enabled").GetValue<bool>();
+                Configs.Menu["ES_" + this.MenuName + "_Enabled"] == null
+                || Configs.Menu["ES_" + this.MenuName + "_Enabled"].Cast<CheckBox>().CurrentValue;
 
         public bool IsReady
             =>
                 !this.IsItem
                 && (string.IsNullOrEmpty(this.CheckSpellName)
-                    || ObjectManager.Player.GetSpell(this.Slot).Name == this.CheckSpellName) && this.Slot.IsReady();
+                    || ObjectManager.Player.Spellbook.GetSpell(this.Slot).Name == this.CheckSpellName) && //&& this.Slot.IsReady{};
+            ((IsSummonerSpell && ObjectManager.Player.Spellbook.CanUseSpell(Slot) == SpellState.Ready) ||
+                     (!IsSummonerSpell && ObjectManager.Player.Spellbook.CanUseSpell(Slot) == SpellState.Ready));
 
         public bool IsTargetted => this.ValidTargets != null && this.ValidTargets.Length > 0;
 
@@ -155,7 +157,7 @@
     {
         #region Constructors and Destructors
 
-        public BlinkData(string menuName, SpellSlot slot, float range, int delay, int dangerLevel)
+        public BlinkData(string menuName, SpellSlot slot, float range, int delay, int dangerLevel, bool isSummonerSpell = false)
         {
             this.MenuName = menuName;
             this.Slot = slot;
@@ -163,6 +165,8 @@
             this.Delay = delay;
             this.DangerLevel = dangerLevel;
             this.IsBlink = true;
+            IsSummonerSpell = isSummonerSpell;
+
         }
 
         #endregion

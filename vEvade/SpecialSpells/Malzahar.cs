@@ -1,11 +1,8 @@
 ﻿namespace vEvade.SpecialSpells
 {
     #region
-
-    using LeagueSharp;
-    using LeagueSharp.Common;
     using EloBuddy;
-
+    using EloBuddy.SDK;
     using vEvade.Spells;
 
     using SpellData = vEvade.Spells.SpellData;

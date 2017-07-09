@@ -3,10 +3,8 @@
     #region
 
     using System.Collections.Generic;
-
-    using LeagueSharp;
-    using LeagueSharp.Common;
     using EloBuddy;
+    using EloBuddy.SDK;
 
     #endregion
 
@@ -72,7 +70,7 @@
                         ObjectManager.Player.MoveSpeed
                         * (1
                            + new[] { 0.7f, 0.75f, 0.8f, 0.85f, 0.9f }[
-                               ObjectManager.Player.GetSpell(SpellSlot.W).Level - 1])));
+                               ObjectManager.Player.Spellbook.GetSpell(SpellSlot.W).Level - 1])));
             }
 
             #endregion Blitzcrank
@@ -91,7 +89,7 @@
                         ObjectManager.Player.MoveSpeed
                         * (1
                            + new[] { 0.4f, 0.45f, 0.5f, 0.55f, 0.6f }[
-                               ObjectManager.Player.GetSpell(SpellSlot.W).Level - 1])));
+                               ObjectManager.Player.Spellbook.GetSpell(SpellSlot.W).Level - 1])));
             }
 
             #endregion Draven
@@ -109,7 +107,7 @@
                         () =>
                         ObjectManager.Player.MoveSpeed
                         * (1
-                           + new[] { 0.3f, 0.4f, 0.5f, 0.6f, 0.7f }[ObjectManager.Player.GetSpell(SpellSlot.W).Level - 1
+                           + new[] { 0.3f, 0.4f, 0.5f, 0.6f, 0.7f }[ObjectManager.Player.Spellbook.GetSpell(SpellSlot.W).Level - 1
                                  ])));
             }
 
@@ -157,7 +155,7 @@
                         ObjectManager.Player.MoveSpeed
                         * (1
                            + new[] { 0.4f, 0.45f, 0.5f, 0.55f, 0.6f }[
-                               ObjectManager.Player.GetSpell(SpellSlot.E).Level - 1])));
+                               ObjectManager.Player.Spellbook.GetSpell(SpellSlot.E).Level - 1])));
             }
 
             #endregion Karma
@@ -175,7 +173,7 @@
                         () =>
                         ObjectManager.Player.MoveSpeed
                         * (1
-                           + new[] { 0.5f, 0.6f, 0.7f, 0.8f, 0.9f }[ObjectManager.Player.GetSpell(SpellSlot.W).Level - 1
+                           + new[] { 0.5f, 0.6f, 0.7f, 0.8f, 0.9f }[ObjectManager.Player.Spellbook.GetSpell(SpellSlot.W).Level - 1
                                  ])));
             }
 
@@ -195,7 +193,7 @@
                         ObjectManager.Player.MoveSpeed
                         * (1
                            + (new[] { 0.18f, 0.21f, 0.24f, 0.27f, 0.3f }[
-                               ObjectManager.Player.GetSpell(SpellSlot.W).Level - 1]
+                               ObjectManager.Player.Spellbook.GetSpell(SpellSlot.W).Level - 1]
                               + ObjectManager.Player.TotalMagicalDamage / 100 * 0.07f))));
             }
 
@@ -250,7 +248,7 @@
                         ObjectManager.Player.MoveSpeed
                         * (1
                            + new[] { 0.08f, 0.09f, 0.1f, 0.11f, 0.12f }[
-                               ObjectManager.Player.GetSpell(SpellSlot.W).Level - 1])));
+                               ObjectManager.Player.Spellbook.GetSpell(SpellSlot.W).Level - 1])));
             }
 
             #endregion Nunu
@@ -269,7 +267,7 @@
                         ObjectManager.Player.MoveSpeed
                         * (1
                            + new[] { 0.1f, 0.15f, 0.2f, 0.25f, 0.3f }[
-                               ObjectManager.Player.GetSpell(SpellSlot.W).Level - 1]
+                               ObjectManager.Player.Spellbook.GetSpell(SpellSlot.W).Level - 1]
                            * (ObjectManager.Player.ManaPercent >= 50 ? 1.5f : 1))));
             }
 
@@ -289,7 +287,7 @@
                         ObjectManager.Player.MoveSpeed
                         * (1
                            + new[] { 0.3f, 0.35f, 0.4f, 0.45f, 0.5f }[
-                               ObjectManager.Player.GetSpell(SpellSlot.W).Level - 1])));
+                               ObjectManager.Player.Spellbook.GetSpell(SpellSlot.W).Level - 1])));
             }
 
             #endregion Shyvana
@@ -306,7 +304,7 @@
                         5,
                         () =>
                         ObjectManager.Player.MoveSpeed
-                        * (1 + new[] { 0.4f, 0.5f, 0.6f }[ObjectManager.Player.GetSpell(SpellSlot.R).Level - 1])));
+                        * (1 + new[] { 0.4f, 0.5f, 0.6f }[ObjectManager.Player.Spellbook.GetSpell(SpellSlot.R).Level - 1])));
             }
 
             #endregion Sivir
@@ -325,7 +323,7 @@
                         ObjectManager.Player.MoveSpeed
                         * (1
                            + (new[] { 0.1f, 0.11f, 0.12f, 0.13f, 0.14f }[
-                               ObjectManager.Player.GetSpell(SpellSlot.E).Level - 1]
+                               ObjectManager.Player.Spellbook.GetSpell(SpellSlot.E).Level - 1]
                               + ObjectManager.Player.TotalMagicalDamage / 100 * 0.06f))));
             }
 
@@ -345,7 +343,7 @@
                         ObjectManager.Player.MoveSpeed
                         * (1
                            + new[] { 0.2f, 0.28f, 0.36f, 0.44f, 0.52f }[
-                               ObjectManager.Player.GetSpell(SpellSlot.W).Level - 1])));
+                               ObjectManager.Player.Spellbook.GetSpell(SpellSlot.W).Level - 1])));
             }
 
             #endregion Teemo
@@ -364,7 +362,7 @@
                         ObjectManager.Player.MoveSpeed
                         * (1
                            + new[] { 0.15f, 0.2f, 0.25f, 0.3f, 0.35f }[
-                               ObjectManager.Player.GetSpell(SpellSlot.E).Level - 1])));
+                               ObjectManager.Player.Spellbook.GetSpell(SpellSlot.E).Level - 1])));
             }
 
             #endregion Udyr
@@ -730,9 +728,9 @@
 
             #endregion Invulnerability
 
-            if (ObjectManager.Player.GetSpellSlot("SummonerFlash") != SpellSlot.Unknown)
+            if (ObjectManager.Player.GetSpellSlotFromName("SummonerFlash") != SpellSlot.Unknown)
             {
-                Spells.Add(new BlinkData("Flash", ObjectManager.Player.GetSpellSlot("SummonerFlash"), 425, 100, 5));
+                Spells.Add(new BlinkData("Flash", ObjectManager.Player.GetSpellSlotFromName("SummonerFlash"), 425, 100, 5));
             }
 
             Spells.Add(new EvadeSpellData("Zhonyas", 5) { IsItem = true });

@@ -1,8 +1,6 @@
 ﻿namespace vEvade.SpecialSpells
 {
     #region
-
-    using LeagueSharp;
     using EloBuddy;
     using vEvade.Spells;
 

@@ -4,11 +4,8 @@
 
     using System;
     using System.Linq;
-
-    using LeagueSharp;
-    using LeagueSharp.Common;
     using EloBuddy;
-
+    using EloBuddy.SDK;
     using vEvade.Core;
 
     using SpellData = vEvade.Spells.SpellData;
@@ -48,7 +45,7 @@
                     i.Data.MenuName == "ZileanQ" && i.EndTick <= Utils.GameTimeTickCount && i.MissileObject == null
                     && i.ToggleObject == null))
             {
-                LeagueSharp.Common.Utility.DelayAction.Add(1, () => Evade.DetectedSpells.Remove(spell.SpellId));
+                DelayAction.Add(1, () => Evade.DetectedSpells.Remove(spell.SpellId));
             }
         }
 

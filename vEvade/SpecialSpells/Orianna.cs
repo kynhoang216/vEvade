@@ -3,11 +3,9 @@
     #region
 
     using System.Linq;
-
-    using LeagueSharp;
-    using LeagueSharp.Common;
+    
     using EloBuddy;
-
+    using EloBuddy.SDK;
     using SharpDX;
 
     using vEvade.Managers;
@@ -62,9 +60,9 @@
             else
             {
                 foreach (var hero in
-                    HeroManager.AllHeroes.Where(
+                    EntityManager.Heroes.AllHeroes.Where(
                         i =>
-                        i.IsValid() && !i.IsDead && i.IsVisible && i.Team == sender.Team
+                        i.IsValid && !i.IsDead && i.IsVisible && i.Team == sender.Team
                         && i.NetworkId != sender.NetworkId && i.HasBuff("OrianaGhost")))
                 {
                     startPos = hero.ServerPosition;
@@ -76,7 +74,7 @@
                         ObjectManager.Get<Obj_AI_Minion>()
                             .Where(
                                 i =>
-                                i.IsValid() && !i.IsDead && i.IsVisible && i.CharData.BaseSkinName == "oriannaball"
+                                i.IsValid && !i.IsDead && i.IsVisible && i.CharData.BaseSkinName == "oriannaball"
                                 && i.Team == sender.Team))
                     {
                         startPos = ball.ServerPosition;

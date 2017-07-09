@@ -5,11 +5,9 @@ namespace vEvade.Core
     using System;
     using System.Collections.Generic;
     using System.Linq;
-
-    using LeagueSharp;
     using EloBuddy;
-    using LeagueSharp.Common;
-
+    using EloBuddy.SDK.Menu;
+    using EloBuddy.SDK;
     using SharpDX;
 
     using vEvade.EvadeSpells;
@@ -19,6 +17,8 @@ namespace vEvade.Core
 
     using Color = System.Drawing.Color;
     using SpellData = vEvade.Spells.SpellData;
+    using EloBuddy.SDK.Events;
+    using EloBuddy.SDK.Menu.Values;
 
     #endregion
 
@@ -101,8 +101,8 @@ namespace vEvade.Core
             Player.OnIssueOrder += OnIssueOrder;
             Spellbook.OnCastSpell += OnCastSpell;
             Drawing.OnDraw += OnDraw;
-            CustomEvents.Unit.OnDash += OnDash;
-            Orbwalking.BeforeAttack += BeforeAttack;
+            Dash.OnDash += OnDash;
+            Orbwalker.OnPreAttack += BeforeAttack;
             //Spellbook.OnStopCast += OnStopCast;
             Collisions.Init();
         }
@@ -111,7 +111,7 @@ namespace vEvade.Core
 
         #region Methods
 
-        private static void BeforeAttack(Orbwalking.BeforeAttackEventArgs args)
+        private static void BeforeAttack(AttackableUnit target, Orbwalker.PreAttackArgs args)
         {
             if (Evading)
             {
@@ -147,7 +147,7 @@ namespace vEvade.Core
 
             foreach (var spell in Spells.Where(i => !i.IsSafePoint(PlayerPosition)))
             {
-                isDangerous = spell.GetValue<bool>("IsDangerous");
+                isDangerous = spell.GetCheckBoxValue("IsDangerous").CurrentValue;
 
                 if (isDangerous)
                 {
@@ -163,7 +163,7 @@ namespace vEvade.Core
             args.Process = !SpellBlocker.CanBlock(args.Slot);
         }
 
-        private static void OnDash(Obj_AI_Base sender, Dash.DashItem args)
+        private static void OnDash(Obj_AI_Base sender, Dash.DashEventArgs args)
         {
             if (!sender.IsMe)
             {
@@ -176,7 +176,7 @@ namespace vEvade.Core
                     $"{Utils.GameTimeTickCount} Dash => Speed: {args.Speed}, Dist: {args.EndPos.Distance(args.StartPos)}");
             }
 
-            evadePoint2 = args.EndPos;
+            evadePoint2 = args.EndPos.To2D();
         }
 
         private static void OnDraw(EventArgs args)
@@ -216,15 +216,15 @@ namespace vEvade.Core
                     Util.DrawLine(curPaths[i], curPaths[i + 1], Color.White);
                 }
 
-                var evadePaths = Core.FindPaths(PlayerPosition, Game.CursorPos.To2D());
+                var evadePaths = PathFinding.Core.FindPaths(PlayerPosition, Game.CursorPos.To2D());
 
                 for (var i = 0; i < evadePaths.Count - 1; i++)
                 {
                     Util.DrawLine(evadePaths[i], evadePaths[i + 1], Color.Red);
                 }
 
-                Render.Circle.DrawCircle(evadePoint1.To3D(), 100, Color.White);
-                Render.Circle.DrawCircle(evadePoint2.To3D(), 100, Color.Red);
+                new EloBuddy.SDK.Rendering.Circle() { BorderWidth = 2, Color = Color.White, Radius = 100 }.Draw(evadePoint1.To3D());
+                new EloBuddy.SDK.Rendering.Circle() { BorderWidth = 2, Color = Color.Red, Radius = 100 }.Draw(evadePoint2.To3D());
             }
         }
 
@@ -312,7 +312,7 @@ namespace vEvade.Core
                 var target = args.Target as AttackableUnit;
 
                 if (target == null || !target.IsValid || !target.IsVisible
-                    || PlayerPosition.Distance(target.Position) <= Orbwalking.GetRealAutoAttackRange(target))
+                    || PlayerPosition.Distance(target.Position) <= LeagueSharp.Common.Orbwalking.GetRealAutoAttackRange(target))
                 {
                     return;
                 }
@@ -346,7 +346,7 @@ namespace vEvade.Core
                     i.MissileObject == null && i.ToggleObject == null && i.TrapObject == null
                     && i.Unit.CompareId(caster)))
             {
-                LeagueSharp.Common.Utility.DelayAction.Add(1, () => DetectedSpells.Remove(spell.SpellId));
+                DelayAction.Add(1, () => DetectedSpells.Remove(spell.SpellId));
 
                 if (Configs.Debug)
                 {
@@ -376,7 +376,7 @@ namespace vEvade.Core
                 return;
             }
 
-            if (ObjectManager.Player.Spellbook.IsAutoAttacking && !Orbwalking.IsAutoAttack(ObjectManager.Player.LastCastedSpellName()))
+            if (ObjectManager.Player.Spellbook.IsAutoAttacking && !LeagueSharp.Common.Orbwalking.IsAutoAttack(ObjectManager.Player.LastCastedSpellName()))
             {
                 Evading = false;
 
@@ -384,10 +384,10 @@ namespace vEvade.Core
             }
 
             foreach (var ally in
-                HeroManager.Allies.Where(
+                EntityManager.Heroes.Allies.Where(
                     i =>
                     !i.IsMe && i.IsValidTarget(1000, false)
-                    && Configs.Menu.Item("SA_" + i.ChampionName).GetValue<bool>()))
+                    && Configs.Menu["SA_" + i.ChampionName].Cast<CheckBox>().CurrentValue))
             {
                 var checkSafe = ally.ServerPosition.To2D().IsPointSafe();
 
@@ -397,7 +397,7 @@ namespace vEvade.Core
                 }
 
                 var dangerLvl =
-                    checkSafe.Spells.Select(i => i.GetValue<Slider>("DangerLvl").Value).Concat(new[] { 0 }).Max();
+                    checkSafe.Spells.Select(i => i.GetSliderValue("DangerLvl").CurrentValue).Concat(new[] { 0 }).Max();
 
                 foreach (var evadeSpell in
                     EvadeSpellDatabase.Spells.Where(
@@ -476,7 +476,7 @@ namespace vEvade.Core
                 return;
             }
 
-            var newPaths = Core.FindPaths(PlayerPosition, evadePoint2);
+            var newPaths = PathFinding.Core.FindPaths(PlayerPosition, evadePoint2);
 
             if (newPaths.Count == 0)
             {
@@ -499,7 +499,7 @@ namespace vEvade.Core
 
         private static void TryToEvade(List<SpellInstance> spells, Vector2 to)
         {
-            var dangerLvl = spells.Select(i => i.GetValue<Slider>("DangerLvl").Value).Concat(new[] { 0 }).Max();
+            var dangerLvl = spells.Select(i => i.GetSliderValue("DangerLvl").CurrentValue).Concat(new[] { 0 }).Max();
 
             foreach (var evadeSpell in EvadeSpellDatabase.Spells.Where(i => i.Enabled && dangerLvl >= i.DangerLevel))
             {
@@ -589,9 +589,9 @@ namespace vEvade.Core
                             }
 
                             if (evadeSpell.ValidTargets.Contains(SpellValidTargets.AllyWards)
-                                && Configs.Menu.Item("ES" + evadeSpell.MenuName + "_WardJump").GetValue<bool>())
+                                && Configs.Menu["ES" + evadeSpell.MenuName + "_WardJump"].Cast<CheckBox>().CurrentValue)
                             {
-                                var ward = Items.GetWardSlot();
+                                var ward = LeagueSharp.Common.Items.GetWardSlot();
 
                                 if (ward != null)
                                 {
@@ -716,7 +716,7 @@ namespace vEvade.Core
                                     if (evadeSpell.RequiresPreMove)
                                     {
                                         evadePoint1.Move();
-                                        LeagueSharp.Common.Utility.DelayAction.Add(
+                                        DelayAction.Add(
                                             Game.Ping / 2 + 100,
                                             () =>
                                             ObjectManager.Player.Spellbook.CastSpell(
@@ -789,9 +789,9 @@ namespace vEvade.Core
                             }
 
                             if (evadeSpell.ValidTargets.Contains(SpellValidTargets.AllyWards)
-                                && Configs.Menu.Item("ES" + evadeSpell.MenuName + "_WardJump").GetValue<bool>())
+                                && Configs.Menu["ES" + evadeSpell.MenuName + "_WardJump"].Cast<CheckBox>().CurrentValue)
                             {
-                                var ward = Items.GetWardSlot();
+                                var ward = LeagueSharp.Common.Items.GetWardSlot();
 
                                 if (ward != null)
                                 {
@@ -945,11 +945,11 @@ namespace vEvade.Core
                     }
                 }
 
-                if (evadeSpell.MenuName == "Zhonyas" && Items.CanUseItem("ZhonyasHourglass"))
+                if (evadeSpell.MenuName == "Zhonyas" && LeagueSharp.Common.Items.CanUseItem("ZhonyasHourglass"))
                 {
                     if (IsAboutToHit(100))
                     {
-                        Items.UseItem("ZhonyasHourglass");
+                        LeagueSharp.Common.Items.UseItem("ZhonyasHourglass");
                     }
 
                     haveSolution = true;
@@ -980,17 +980,17 @@ namespace vEvade.Core
                 if (spell.Data.IsDash && Utils.GameTimeTickCount - spell.StartTick > spell.Data.Delay + 100
                     && !spell.Unit.IsDashing())
                 {
-                    LeagueSharp.Common.Utility.DelayAction.Add(50, () => DetectedSpells.Remove(spell.SpellId));
+                    DelayAction.Add(50, () => DetectedSpells.Remove(spell.SpellId));
                 }
 
                 if (spell.TrapObject != null && spell.TrapObject.IsDead)
                 {
-                    LeagueSharp.Common.Utility.DelayAction.Add(1, () => DetectedSpells.Remove(spell.SpellId));
+                    DelayAction.Add(1, () => DetectedSpells.Remove(spell.SpellId));
                 }
 
                 if (spell.EndTick + spell.Data.ExtraDuration <= Utils.GameTimeTickCount)
                 {
-                    LeagueSharp.Common.Utility.DelayAction.Add(1, () => DetectedSpells.Remove(spell.SpellId));
+                    DelayAction.Add(1, () => DetectedSpells.Remove(spell.SpellId));
 
                     if (Configs.Debug)
                     {

@@ -3,11 +3,8 @@
     #region
 
     using System.Linq;
-
-    using LeagueSharp;
     using EloBuddy;
-    using LeagueSharp.Common;
-
+    using EloBuddy.SDK;
     using vEvade.Managers;
     using vEvade.Spells;
 
@@ -52,9 +49,9 @@
             }
 
             foreach (var hero in
-                HeroManager.AllHeroes.Where(
+                EntityManager.Heroes.AllHeroes.Where(
                     i =>
-                    i.IsValid() && !i.IsDead && i.IsVisible && i.Team == sender.Team && i.HasBuff("taricwleashactive")))
+                    i.IsValid && !i.IsDead && i.IsVisible && i.Team == sender.Team && i.HasBuff("taricwleashactive")))
             {
                 SpellDetector.AddSpell(hero, hero.ServerPosition, args.End, data);
             }

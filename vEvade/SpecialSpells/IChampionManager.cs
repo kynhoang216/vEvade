@@ -1,9 +1,7 @@
 ﻿namespace vEvade.SpecialSpells
 {
     #region
-
-    using LeagueSharp;
-    using LeagueSharp.Common;
+    using EloBuddy.SDK;
 
     using vEvade.Spells;
     using EloBuddy;

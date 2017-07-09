@@ -7,15 +7,13 @@
     using System.Text.RegularExpressions;
     using EloBuddy;
 
-    using LeagueSharp;
-    using LeagueSharp.Common;
-
     using vEvade.Core;
     using vEvade.Helpers;
     using vEvade.Managers;
     using vEvade.Spells;
 
     using SpellData = vEvade.Spells.SpellData;
+    using EloBuddy.SDK;
 
     #endregion
 
@@ -59,7 +57,7 @@
 
             foreach (var obj in
                 ObjectManager.Get<Obj_AI_Minion>()
-                    .Where(i => i.IsValid() && !i.IsDead && i.Name == "Ekko" && i.Team == sender.Team))
+                    .Where(i => i.IsValid && !i.IsDead && i.Name == "Ekko" && i.Team == sender.Team))
             {
                 SpellDetector.AddSpell(sender, sender.ServerPosition, obj.ServerPosition, data);
             }

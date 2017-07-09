@@ -1,11 +1,9 @@
 ﻿namespace vEvade.SpecialSpells
 {
     #region
-
-    using LeagueSharp;
-    using LeagueSharp.Common;
-    using EloBuddy; 
-
+    using EloBuddy;
+    using EloBuddy.SDK;
+    using EloBuddy.SDK.Events;
     using vEvade.Helpers;
     using vEvade.Spells;
 
@@ -30,7 +28,7 @@
                 return;
             }
 
-            CustomEvents.Unit.OnDash += (sender, args) => OnDash(sender, args, spellData);
+            Dash.OnDash += (sender, args) => OnDash(sender, args, spellData);
             Obj_AI_Base.OnPlayAnimation += (sender, args) => OnPlayAnimation(sender, args, spellData);
         }
 
@@ -38,7 +36,7 @@
 
         #region Methods
 
-        private static void OnDash(Obj_AI_Base sender, Dash.DashItem args, SpellData data)
+        private static void OnDash(Obj_AI_Base sender, Dash.DashEventArgs args, SpellData data)
         {
             var caster = sender as AIHeroClient;
 

@@ -1,9 +1,7 @@
 ﻿namespace vEvade.SpecialSpells
 {
     #region
-
-    using LeagueSharp;
-    using LeagueSharp.Common;
+    
     using EloBuddy;
 
     using vEvade.Spells;
@@ -49,7 +47,7 @@
             }
 
             var newData = (SpellData)data.Clone();
-            newData.Radius = data.Radius * new[] { 4, 5, 6 }[((AIHeroClient)sender).GetSpell(data.Slot).Level - 1];
+            newData.Radius = data.Radius * new[] { 4, 5, 6 }[((AIHeroClient)sender).Spellbook.GetSpell(data.Slot).Level - 1];
             //spellArgs.NewData = newData;
         }
 

@@ -4,7 +4,6 @@
 
     using System.Linq;
     using EloBuddy;
-    using LeagueSharp;
 
     using vEvade.Core;
     using vEvade.Helpers;

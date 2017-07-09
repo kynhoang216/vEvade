@@ -5,9 +5,7 @@
     using System;
     using System.Linq;
     using System.Text.RegularExpressions;
-
-    using LeagueSharp;
-    using LeagueSharp.Common;
+    using EloBuddy.SDK;
     using EloBuddy;
 
     using SharpDX;
@@ -308,7 +306,7 @@
 
             var caster = missile.SpellCaster;
 
-            if (!caster.IsValid() || (!caster.IsEnemy && !Configs.Debug))
+            if (!caster.IsValid || (!caster.IsEnemy && !Configs.Debug))
             {
                 return;
             }
@@ -326,7 +324,7 @@
                 return;
             }
 
-            LeagueSharp.Common.Utility.DelayAction.Add(0, () => OnCreateMissileDelay(missile, caster, data));
+            DelayAction.Add(0, () => OnCreateMissileDelay(missile, caster, data));
         }
 
         private static void OnCreateMissileDelay(MissileClient missile, Obj_AI_Base caster, SpellData data)
@@ -401,7 +399,7 @@
 
             if (Evade.OnTrapSpells.TryGetValue(trap.CharData.BaseSkinName, out data))
             {
-                LeagueSharp.Common.Utility.DelayAction.Add(0, () => OnCreateTrapDelay(trap, data));
+                DelayAction.Add(0, () => OnCreateTrapDelay(trap, data));
             }
         }
 
@@ -409,7 +407,7 @@
         {
             var pos = trap.Position.To2D();
             var caster =
-                HeroManager.AllHeroes.First(i => i.ChampionName == data.ChampName && (i.IsEnemy || Configs.Debug));
+                LeagueSharp.Common.HeroManager.AllHeroes.First(i => i.ChampionName == data.ChampName && (i.IsEnemy || Configs.Debug));
             var spell = new SpellInstance(data, Utils.GameTimeTickCount - Game.Ping / 2, 0, pos, pos, caster, data.Type)
                             { SpellId = spellIdCount++, TrapObject = trap };
             Evade.DetectedSpells.Add(spell.SpellId, spell);
@@ -431,7 +429,7 @@
 
             var caster = missile.SpellCaster;
 
-            if (!caster.IsValid() || (!caster.IsEnemy && !Configs.Debug))
+            if (!caster.IsValid || (!caster.IsEnemy && !Configs.Debug))
             {
                 return;
             }
@@ -444,7 +442,7 @@
             {
                 if (string.IsNullOrEmpty(spell.Data.ToggleName) || spell.Type != SpellType.Circle)
                 {
-                    LeagueSharp.Common.Utility.DelayAction.Add(1, () => Evade.DetectedSpells.Remove(spell.SpellId));
+                    DelayAction.Add(1, () => Evade.DetectedSpells.Remove(spell.SpellId));
 
                     if (Configs.Debug)
                     {
@@ -457,7 +455,7 @@
                     spell.PredEnd = Vector2.Zero;
                     spell.End = missile.Position.To2D();
 
-                    LeagueSharp.Common.Utility.DelayAction.Add(
+                    DelayAction.Add(
                         100,
                         () =>
                             {
@@ -492,7 +490,7 @@
                     !string.IsNullOrEmpty(i.Data.ToggleName) && i.ToggleObject != null
                     && i.ToggleObject.CompareId(toggle)))
             {
-                LeagueSharp.Common.Utility.DelayAction.Add(1, () => Evade.DetectedSpells.Remove(spell.SpellId));
+                DelayAction.Add(1, () => Evade.DetectedSpells.Remove(spell.SpellId));
 
                 if (Configs.Debug)
                 {
